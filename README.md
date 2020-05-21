@@ -1,1 +1,5 @@
-# cloud-functions
+# Cloud Functions
+
+A repository of cloud functions
+
+## Usage
