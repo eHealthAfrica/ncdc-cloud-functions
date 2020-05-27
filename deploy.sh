@@ -2,8 +2,8 @@
 
 set -ex
 
-export GOOGLE_APPLICATION_CREDENTIALS="gcp-key-dev.json"
-export GOOGLE_CLOUD_PROJECT="development-223016"
+gcloud auth activate-service-account --key-file "${PWD}/gcp-key-dev.json" || die "unable to authenticate service account for gcloud"
+gcloud --quiet config set project "development-223016"
 
 for runtime in */; do
   for function in $runtime/*; do
