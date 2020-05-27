@@ -2,9 +2,10 @@ sudo: false
 language: node_js
 node:
 - '9'
-
+script:
+- echo "Amazing!"
 before_install:
-  - openssl aes-256-cbc -k $encrypt_key -in gcp-key-dev.json.enc -out gcp-key-dev.json -d
+- openssl aes-256-cbc -k $encrypt_key -in gcp-key-dev.json.enc -out gcp-key-dev.json -d
 
 before_deploy:
 - if [ ! -d "$HOME/google-cloud-sdk/bin" ]; then rm -rf $HOME/google-cloud-sdk; export
@@ -20,4 +21,3 @@ deploy:
   skip_cleanup: true
   on:
     branch: master
-    https://github.com/mikesparr/google-cloud-functions-deploy
