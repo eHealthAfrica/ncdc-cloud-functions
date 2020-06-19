@@ -1,0 +1,5 @@
+backports.os==0.1.1
+backports.shutil-get-terminal-size==1.0.0
+backports.ssl==0.0.9
+IMAPClient==0.13
+pyOpenSSL==19.0.0
