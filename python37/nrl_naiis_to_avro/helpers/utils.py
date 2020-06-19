@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-import json
 
 
 def read_xlxs(request):
@@ -29,12 +28,3 @@ def read_xlxs(request):
             sheet_dict['data'] = data
             data_list.append(sheet_dict)
     return data_list
-
-
-def request_to_ckan_query(request):
-    request_data = json.loads(request.data)
-    categories = request_data.get('categories', [])
-    fields = request_data.get('fields', [])
-    ckan_query_url = \
-        f'/q?categories={json.dumps(categories)}&facets={json.dumps(fields)}'
-    return ckan_query_url
