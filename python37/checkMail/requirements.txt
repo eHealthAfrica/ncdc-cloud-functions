@@ -1,5 +1,8 @@
-backports.os==0.1.1
-backports.shutil-get-terminal-size==1.0.0
-backports.ssl==0.0.9
-IMAPClient==0.13
-pyOpenSSL==19.0.0
+Flask==1.1.2
+IMAPClient==2.1.0
+backports.statistics==0.1.0
+protobuf==3.12.2
+pyOpenSSL==19.1.0
+backports.ssl
+google-cloud-storage
+
