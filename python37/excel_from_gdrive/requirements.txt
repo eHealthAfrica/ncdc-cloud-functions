@@ -1,0 +1,4 @@
+functions-framework==1.4.3
+pandas==1.0.4
+requests
+xlrd

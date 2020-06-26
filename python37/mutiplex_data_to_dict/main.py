@@ -5,6 +5,6 @@ from helpers.utils import (
 )
 
 
-def naiis_dict_avro(request):
+def multiplex_data_to_dict(request):
     data = read_xlxs(request)
     return flask.make_response(json.dumps(data))
