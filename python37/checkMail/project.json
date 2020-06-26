@@ -1,0 +1,12 @@
+{
+	"type": "service_account",
+	"project_id": "quick-bonfire-278608",
+	"private_key_id": "iofhjfgihh",
+	"private_key": "-----BEGIN PRIVATE KEY-----\uEIa+fgkjhgfjhfjhfjgf+K/e3qRxQ\nrGR27sp2iDZE0dR0z1RGERM6MIHqNvP4lCV+mkgjk\nlKEEiI7yxECL5drvgBuubKAhlIfbrub9++ctzKMlpDV11+eltwz8vsMBmIe2eOLh\nziMdlziOEbvookMHWR2Pk46oTk8KLHfLAVfUWbT19vu7IMAS8zo9Lpgqd+RiG1q0\nxZzc1m5hAgMBAAECgf8b+Ak6ATDfzEyeDz5gTc3VitmoGYksyUpDbEDYwM6DwHEs\n0YmYo6UQxDKVdKApQL3VfgvCbvPWpTpoMDH8deUtO/NxiiScNZtj30CCSzuV9Zdq\nD61tlvN2Wbv/YQvAnrJ2x3sscQcepp32JmFCKPHciqaziKL89AQgqya7HWjkA95b\nwIIhNElI/KXErTUOncsCsYXZKj6jnPlcf6EuiXB5oxFGqcKxl00w+NTYwCqEhdVT\n9KVvM2bFPLLwXrnLETL71bYRF9oI+WhJei6UywUCIEueyshbt7GhphyrbjBL90YA\n8RvVZGCuPRPzHDi4t617PTANQcpDTe3LcaX5WOkCgYEA7rpRQsFq8sJIcMZeid52\ngckjyE/eL1FrrpS5w1ENX4h1YiTP25gTRhqLIOBPBKOdaMn7+BINLyaWCsfLHRWo\nA7SvIbOZeyl5pprXG2B5FrcJYos7jHKhWy5y1KRSz4HRZgNZSbVKxEBRb92K/Ri+\n/HL0bdNiUFK7u7hJN9UGkjUCgYEA4Lo8ZEA+4xeiYiwps/0EjByYsrtpnFYP459v\nie4s2mh8wRVvosFvXhO0XuV+3F6dOWPJLl8UWfzEt7jFoCE4TZU7ICs/WQOvvrC6\nEooa4SSdLQ9SNhQXhlISajRd9vZWzBN3wmE8z7JHMwphR1wQyCnCQ6Js7dK5WE/b\nuo/2MP0Cf01mGvKJwyLx2oq1xfDtL37kt7U6L88nlsIDdjbdEHjoxSYMyVdo9tbD\nxFfkYbofUemnkwna0Gt5FyxnmnLTkqWg7yb+E8TarZZWnWdC3/99WI2alrPydl4Z\nsSFAJZkhfcKVU12Saas3LzAVo/prC4DNxHHXFwjzyeoS1apEZt0CgYANFcr+a18+\nCdpCrR+gg1MIdYHOpmr312sFbfsopN2nuf3JoF3ntCuv5qXSALrqSfgNp2nHcXHV\n64noyLF5KXYFznKq5NnDbRuGlvO+sJvwEBm2zfWTgIf+IjlARdxSzPUw3NFUWCUa\nUt8icbBIX2v6u7O8DHEbR/HS2pOIwWksYQKBgHRQabxdouf0g0ieR7YBCxYHnx8x\nA15/utofH2bPRYrRQf+m24igEweXuq8rPt5stNQpkEtw6ZTJpH3UCEpW/KQ+HFA0\nZTAFpSPeFUOXkPfKdqhSXy5GulACQqaitWxQ/wrna6UKpnNHHQEFumuE3u1H6eoZ\n4yeyA7pqxKsfO6x6\n-----END PRIVATE KEY-----\n",
+	"client_email": "cgg-bonfire-278608@appspot.gserviceaccount.com",
+	"client_id": "100900006794201691035",
+	"auth_uri": "https://accounts.google.com/o/oauth2/auth",
+	"token_uri": "https://oauth2.googleapis.com/token",
+	"auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+	"client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/quick-bonfire-278608%40appspot.gserviceaccount.com"
+}
