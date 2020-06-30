@@ -29,7 +29,6 @@ def sendMail(request):
     messageBody = request.args.get('messageBody')
     if is_encoded:
         messageBody = base64.urlsafe_b64decode(messageBody).decode('utf-8')
-        print(messageBody)
     message = MIMEMultipart()
     message['From'] = emailUser
     message['To'] = recipientAddress
@@ -64,7 +63,6 @@ def sendMail(request):
                         body=API_msg
                     ).execute()
                 )
-        print(f'Message Id: {r_msg["id"]}')
         result['msg'] = r_msg
     except HttpError as error:
         print(f'An error occurred: {error}')
