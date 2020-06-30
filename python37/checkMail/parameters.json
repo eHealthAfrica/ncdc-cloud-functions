@@ -1,5 +1,7 @@
 [{
-		"bucket_name": "attached-mail-file",
-		"folder": "https://storage.cloud.google.com/attached-mail-file"
+		"bucket_name": "ncdc-nrl",
+        "folder": "https://storage.googleapis.com/",
+        "media": "?alt=media"
+
 	}
 ]

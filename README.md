@@ -62,10 +62,10 @@ npm install --save @google-cloud/storage
 Files should be placed in the following structure:
 
 ```bash
-Language
-|-- Function Group
-    |-- main.py | index.js
-        |-- Function name
+Language (folder)
+|-- [function name] (folder)
+    |-- main.py | index.js (file)
+        |-- [function name] (function)
 
 ```
 Reference sample code [here](#) or visit [Writing Google Cloud Functions](https://cloud.google.com/functions/docs/writing) for more information.
