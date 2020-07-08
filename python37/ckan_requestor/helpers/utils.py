@@ -23,10 +23,19 @@ BUCKET_NAME = 'ncdc-nrl'
 
 
 def request_to_ckan_query(rq):
-    data = rq.get_json(silent=True)
-    CKAN_URL = data.get('ckan_url')
-    CKAN_API_KEY = data.get('ckan_api_key')
-    EMAIL_PARAMS = data.get('email_params')
+    data = rq.get_json(silent=True) or {}
+    CKAN_URL = None
+    CKAN_API_KEY = None
+    EMAIL_PARAMS = None
+    TEMPLATE_VERSION = None
+
+    try:
+        CKAN_URL = data.get('ckan_url') or rq.form['ckan_url']
+        CKAN_API_KEY = data.get('ckan_api_key') or rq.form['ckan_api_key']
+        EMAIL_PARAMS = data.get('email_params') or rq.form['email_params']
+        TEMPLATE_VERSION = data.get('template_version') or rq.form['template_version']
+    except Exception:
+        pass
 
     if not CKAN_API_KEY or not CKAN_URL or not EMAIL_PARAMS:
         return {
@@ -87,28 +96,40 @@ def request_to_ckan_query(rq):
             return {'error': 'Malformed request.'}
 
         if len(excel_file.sheet_names):
-            df = excel_file.parse(excel_file.sheet_names[0])
-            dataset = None
-            fields = []
-            query = {}
-            is_first = True
-            is_all_datasets = False
-            all_datasets_list = []
-            for _, row in df.iterrows():
-                row_list = row.values.tolist()
-                _temp_dataset = get_value_or_none(row_list[0])
+            if TEMPLATE_VERSION and TEMPLATE_VERSION == 1:
+                df = excel_file.parse(excel_file.sheet_names[0])
+                dataset = None
+                fields = []
+                query = {}
+                is_first = True
+                is_all_datasets = False
+                all_datasets_list = []
+                for _, row in df.iterrows():
+                    row_list = row.values.tolist()
+                    _temp_dataset = get_value_or_none(row_list[0])
 
-                if _temp_dataset == '*' and is_first:
-                    is_all_datasets = True
-                    config = {
-                        'apikey': CKAN_API_KEY,
-                        'address': CKAN_URL,
-                    }
+                    if _temp_dataset == '*' and is_first:
+                        is_all_datasets = True
+                        config = {
+                            'apikey': CKAN_API_KEY,
+                            'address': CKAN_URL,
+                        }
 
-                    try:
-                        ckan = RemoteCKAN(**config)
-                        datasets = ckan.action.package_list()
-                        all_datasets_list = datasets
+                        try:
+                            ckan = RemoteCKAN(**config)
+                            datasets = ckan.action.package_list()
+                            all_datasets_list = datasets
+                            field = get_value_or_none(row_list[1])
+                            if field:
+                                fields.append(field)
+                            query_key = get_value_or_none(row_list[2])
+                            query_value = get_value_or_none(row_list[3])
+                            if query_key and query_value:
+                                query[query_key] = query_value
+                        except ckanapi_errors.ValidationError as e:
+                            return {'error':
+                                    f'CKAN error: {json.dumps(e.error_dict)}'}
+                    elif is_all_datasets:
                         field = get_value_or_none(row_list[1])
                         if field:
                             fields.append(field)
@@ -116,57 +137,96 @@ def request_to_ckan_query(rq):
                         query_value = get_value_or_none(row_list[3])
                         if query_key and query_value:
                             query[query_key] = query_value
-                    except ckanapi_errors.ValidationError as e:
-                        return {'error':
-                                f'CKAN error: {json.dumps(e.error_dict)}'}
-                elif is_all_datasets:
-                    field = get_value_or_none(row_list[1])
-                    if field:
-                        fields.append(field)
-                    query_key = get_value_or_none(row_list[2])
-                    query_value = get_value_or_none(row_list[3])
-                    if query_key and query_value:
-                        query[query_key] = query_value
-                else:
-                    if _temp_dataset and dataset is None:
-                        dataset = _temp_dataset
-                    if dataset and _temp_dataset and dataset is not _temp_dataset:
+                    else:
+                        if _temp_dataset and dataset is None:
+                            dataset = _temp_dataset
+                        if dataset and _temp_dataset and dataset is not _temp_dataset:
+                            result.append({
+                                dataset: {
+                                    'q': query,
+                                    'f': fields,
+                                },
+                            })
+                            fields = []
+                            query = {}
+                            dataset = _temp_dataset
+
+                        field = get_value_or_none(row_list[1])
+                        if field:
+                            fields.append(field)
+                        query_key = get_value_or_none(row_list[2])
+                        query_value = get_value_or_none(row_list[3])
+                        if query_key and query_value:
+                            query[query_key] = query_value
+
+                    is_first = False
+
+                if is_all_datasets:
+                    for ds in all_datasets_list:
                         result.append({
-                            dataset: {
+                            ds: {
                                 'q': query,
                                 'f': fields,
                             },
                         })
-                        fields = []
-                        query = {}
-                        dataset = _temp_dataset
-
-                    field = get_value_or_none(row_list[1])
-                    if field:
-                        fields.append(field)
-                    query_key = get_value_or_none(row_list[2])
-                    query_value = get_value_or_none(row_list[3])
-                    if query_key and query_value:
-                        query[query_key] = query_value
-
-                is_first = False
-
-            if is_all_datasets:
-                for ds in all_datasets_list:
+                else:
                     result.append({
-                        ds: {
+                        dataset: {
                             'q': query,
                             'f': fields,
                         },
                     })
             else:
-                result.append({
-                    dataset: {
-                        'q': query,
-                        'f': fields,
-                    },
-                })
+                for sheet in excel_file.sheet_names:
+                    df = excel_file.parse(sheet)
+                    dataset = sheet
+                    all_fields = []
+                    include_fields = []
+                    exclude_fields = []
+                    final_selected_fields = []
+                    is_ds_selected = True
+                    is_first_row = True
+                    query = {}
+                    for _, row in df.iterrows():
+                        row_list = row.values.tolist()
+                        if is_first_row and not is_selected(row_list[0]):
+                            is_ds_selected = False
+                            break
+                        is_first_row = False
+                        all_fields.append(row_list[1])
+                        field_mark = get_value_or_none(row_list[5])
+                        if field_mark:
+                            if field_mark.lower() == 'yes':
+                                include_fields.append(row_list[1])
+                            elif field_mark.lower() == 'no':
+                                exclude_fields.append(row_list[1])
+                        filter_value = get_value_or_none(row_list[6])
+                        if filter_value:
+                            query[row_list[1]] = filter_value
+
+                    if len(include_fields):
+                        final_selected_fields = include_fields
+                    elif len(exclude_fields):
+                        final_selected_fields = [
+                            f for f in all_fields if f not in exclude_fields
+                        ]
+
+                    if is_ds_selected:
+                        result.append({
+                            dataset: {
+                                'q': query,
+                                'f': final_selected_fields,
+                            }
+                        })
         return result
+
+
+def is_selected(value):
+    _selected = False
+    _value = get_value_or_none(value)
+    if _value and _value.lower() == 'yes':
+        _selected = True
+    return _selected
 
 
 def get_value_or_none(value):
