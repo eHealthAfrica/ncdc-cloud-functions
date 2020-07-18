@@ -11,6 +11,7 @@ from flask import jsonify
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import flask
+import socket
 
 import os.path
 from googleapiclient.discovery import build
@@ -19,6 +20,8 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
 result = {"result": "True", "body": "The Mail is Sent"}
+counter = 1
+MAX_RETRIES = 3
 
 
 def sendMail(request):
@@ -54,9 +57,8 @@ def sendMail(request):
         with open('token.pickle', 'wb') as token:
             pickle.dump(creds, token)
 
-    service = build('gmail', 'v1', credentials=creds)
-
     try:
+        service = build('gmail', 'v1', credentials=creds)
         r_msg = (
                     service.users().messages().send(
                         userId="me",
@@ -64,7 +66,15 @@ def sendMail(request):
                     ).execute()
                 )
         result['msg'] = r_msg
-    except HttpError as error:
+
+    except socket.timeout:
+        counter = counter + 1
+        print(f'Socket Timeout Retrying ... {counter}')
+        if counter < MAX_RETRIES:
+            sendMail(request)
+        else:
+            result['result'] = 'False'
+    except Exception as error:
         print(f'An error occurred: {error}')
         result['result'] = 'False'
 

@@ -9,8 +9,6 @@ import aiohttp
 import pandas as pd
 import numpy as np
 
-from urllib import parse
-
 from datetime import datetime
 from ckanapi import RemoteCKAN
 from ckanapi import errors as ckanapi_errors
@@ -49,7 +47,11 @@ def request_to_ckan_query(rq):
         if content_type and content_type.startswith('multipart/form-data'):
             if 'file' not in rq.files:
                 raise ValueError('No request file provided.')
-            excel_file = pd.ExcelFile(rq.files['file'])
+            try:
+                excel_file = pd.ExcelFile(rq.files['file'])
+            except Exception as e:
+                print('Error: ', e)
+
         elif content_type and content_type == 'application/json':
             link = data.get('file')
             attachments = EMAIL_PARAMS.get('attachments')
@@ -84,9 +86,13 @@ def request_to_ckan_query(rq):
             elif len(attachments):
                 for attachment in attachments:
                     if '.xls' in attachment:
-                        o = parse.urlparse(attachment)
-                        url = o._replace(path=parse.quote(o.path))
-                        excel_file = pd.ExcelFile(url.geturl())
+                        # o = parse.urlparse(attachment)
+                        # url = o._replace(path=parse.quote(o.path))
+                        try:
+                            excel_file = pd.ExcelFile(attachment)
+                        except Exception as e:
+                            print('Error reading excel file: ', e)
+
                         break
                 if excel_file is None:
                     return {'error': 'No excel file is attached.'}
@@ -307,7 +313,8 @@ async def async_upload_to_bucket(blob_name, file_obj):
         status = await storage.upload(
             BUCKET_NAME,
             f'downloads/{blob_name}',
-            file_obj
+            file_obj,
+            timeout=60,
         )
         return status['mediaLink']
 
