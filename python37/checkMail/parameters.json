@@ -1,7 +1,6 @@
-[{
-		"bucket_name": "ncdc-nrl",
-        "folder": "https://storage.googleapis.com/",
-        "media": "?alt=media"
+{
+    "bucket_name": "ncdc-nrl",
+    "base_url": "https://storage.googleapis.com/",
+    "media": "?alt=media"
 
-	}
-]
+}
