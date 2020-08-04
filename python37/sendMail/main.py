@@ -20,11 +20,10 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
 result = {"result": "True", "body": "The Mail is Sent"}
-counter = 1
 MAX_RETRIES = 3
 
 
-def sendMail(request):
+def sendMail(request, count=0):
     is_encoded = request.args.get('encoded')
     emailUser = request.args.get('emailUser')
     recipientAddress = request.args.get('recipientAddress')
@@ -68,10 +67,10 @@ def sendMail(request):
         result['msg'] = r_msg
 
     except socket.timeout:
-        counter = counter + 1
-        print(f'Socket Timeout Retrying ... {counter}')
-        if counter < MAX_RETRIES:
-            sendMail(request)
+        count = count + 1
+        print(f'Socket Timeout Retrying ... {count}')
+        if count < MAX_RETRIES:
+            sendMail(request, count)
         else:
             result['result'] = 'False'
     except Exception as error:

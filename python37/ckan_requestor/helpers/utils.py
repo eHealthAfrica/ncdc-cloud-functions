@@ -4,6 +4,8 @@ import requests
 import base64
 import logging
 
+import io
+import urllib.request
 import asyncio
 import aiohttp
 import pandas as pd
@@ -89,7 +91,10 @@ def request_to_ckan_query(rq):
                         # o = parse.urlparse(attachment)
                         # url = o._replace(path=parse.quote(o.path))
                         try:
-                            excel_file = pd.ExcelFile(attachment)
+                            web_file = urllib.request.urlopen(
+                                attachment, timeout=120
+                            )
+                            excel_file = pd.ExcelFile(web_file.read())
                         except Exception as e:
                             print('Error reading excel file: ', e)
 
@@ -301,8 +306,12 @@ def get_ckan_data(rq, request_data):
                 for prop in row:
                     df = pd.DataFrame(row[prop])
                     df.to_excel(writer, sheet_name=prop)
+        try:
+            link = asyncio.run(upload(f'./{file_path}', file_name))
+        except Exception:
+            print('Error uploading data file. retrying...')
+            link = asyncio.run(upload(f'./{file_path}', file_name))
 
-        link = asyncio.run(upload(f'./{file_path}', file_name))
         os.remove(file_path)
     return {'link': link, 'message': results}
 
@@ -314,7 +323,7 @@ async def async_upload_to_bucket(blob_name, file_obj):
             BUCKET_NAME,
             f'downloads/{blob_name}',
             file_obj,
-            timeout=60,
+            timeout=120,
         )
         return status['mediaLink']
 

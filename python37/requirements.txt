@@ -11,3 +11,4 @@ SQLAlchemy==1.3.13
 openpyxl
 xlrd
 google-cloud-storage
+beautifulsoup4
