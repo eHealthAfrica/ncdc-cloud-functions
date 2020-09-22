@@ -24,7 +24,8 @@ def check_reviewer_mail(
     emailServer,
     emailUser,
     emailPassword,
-    reviewers
+    reviewers,
+    monitors,
 ):
     creds = None
     SCOPES = ['https://www.googleapis.com/auth/gmail.modify']
@@ -141,7 +142,8 @@ def check_reviewer_mail(
                     'send_mail_requester_review_query_param': 'emailServer='
                     + emailServer + '&emailUser=' + emailUser
                     + '&emailPassword=' + emailPassword + '&recipientAddress='
-                    + address2[0]+'&messageSubject=''Request Received''&'
+                    + address2[0] + '&monitors=' + monitors
+                    + '&messageSubject=''Request Received''&'
                     + 'messageBody=''Hi, <br></br><br></br> Your request has '
                     + 'been received and is being reviewed.'
                     + '<br>We will contact you as soon as it has a response.'

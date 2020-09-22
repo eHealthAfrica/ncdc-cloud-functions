@@ -378,7 +378,8 @@ def get_mailing_params(rq, data):
         'emailServer='
         + EMAIL_PARAMS['server'] + '&emailUser=' + EMAIL_PARAMS['user']
         + '&emailPassword=' + EMAIL_PARAMS['password'] + '&recipientAddress='
-        + EMAIL_PARAMS['requestor_email'] + '&messageSubject=Request Approved&'
+        + EMAIL_PARAMS['requestor_email'] + '&monitors='
+        + EMAIL_PARAMS['monitors'] + '&messageSubject=Request Approved&'
         'messageBody=' + en_body + '&encoded=true'
     )
     data['approval_email_params'] = params

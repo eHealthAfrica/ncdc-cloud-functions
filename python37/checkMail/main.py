@@ -33,6 +33,7 @@ def checkMail(request):
     emailUser = request.args.get('emailUser')
     approvers = request.args.get('approvers')
     reviewers = request.args.get('reviewers')
+    monitors = request.args.get('monitors', '')
 
     isReview = request.args.get('review', False)
 
@@ -47,7 +48,8 @@ def checkMail(request):
             emailServer,
             emailUser,
             emailPassword,
-            reviewers
+            reviewers,
+            monitors,
         )
     else:
         if os.path.exists('token.pickle'):
@@ -175,7 +177,8 @@ def checkMail(request):
                         'send_mail_requester_query_param': 'emailServer='
                         + emailServer+'&'+'emailUser=' + emailUser+'&'
                         + 'emailPassword=' + emailPassword+'&'+'recipientAddress='
-                        + address2[0]+'&'+'messageSubject=''Request Sent for Approval''&'
+                        + address2[0] + '&monitors=' + monitors
+                        + '&messageSubject=''Request Sent for Approval''&'
                         + 'messageBody=''Hi, <br></br><br></br> Your request has '
                         + 'been forwarded for approval.'
                         + '<br>We will contact you as soon as it is treated.'
@@ -185,7 +188,7 @@ def checkMail(request):
                         + emailServer + '&' + 'emailUser=' + emailUser + '&'
                         + 'emailPassword=' + emailPassword + '&'
                         + 'recipientAddress='
-                        + address2[0] + '&'
+                        + address2[0] + '&monitors=' + monitors + '&'
                         + 'messageSubject=''Request Approved''&'
                         + 'messageBody=''Hi, <br></br><br></br> Your request has '
                         + 'been approved<br></br><br></br><br></br>Thanks,<br />'
@@ -193,7 +196,7 @@ def checkMail(request):
                         'send_mail_requester_rejected_query_param': 'emailServer='
                         + emailServer + '&' + 'emailUser=' + emailUser + '&'
                         + 'emailPassword=' + emailPassword + '&'
-                        + 'recipientAddress=' + address2[0]
+                        + 'recipientAddress=' + address2[0] + '&monitors=' + monitors
                         + '&' + 'messageSubject=''Request Rejected''&'
                         + 'messageBody=''Hi, <br></br><br></br> Your request has '
                         + 'been rejected<br></br><br></br><br></br>Thanks,'
@@ -205,6 +208,7 @@ def checkMail(request):
                             'user': emailUser,
                             'password': emailPassword,
                             'attachments': [template_url, ],
+                            'monitors': monitors,
                         }
                     }
                     allsender.append(a)

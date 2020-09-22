@@ -29,12 +29,16 @@ def sendMail(request, count=0):
     recipientAddress = request.args.get('recipientAddress')
     messageSubject = request.args.get('messageSubject')
     messageBody = request.args.get('messageBody')
+    monitors = request.args.get('monitors', '')
+
     if is_encoded:
         messageBody = base64.urlsafe_b64decode(messageBody).decode('utf-8')
     message = MIMEMultipart()
     message['From'] = emailUser
     message['To'] = recipientAddress
     message['Subject'] = messageSubject
+    if monitors:
+        message['CC'] = monitors
     message.attach(MIMEText(messageBody, 'html'))
     API_msg = {'raw': base64.urlsafe_b64encode(
         message.as_string().encode('utf-8')
