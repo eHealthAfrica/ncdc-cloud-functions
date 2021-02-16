@@ -34,6 +34,7 @@ def checkMail(request):
     emailServer = request.args.get('emailServer')
     emailPassword = request.args.get('emailPassword')
     emailUser = request.args.get('emailUser')
+    approvers = request.args.get('approvers')
     sender = []
     allsender = []
 
@@ -145,7 +146,9 @@ def checkMail(request):
 
                 a = {
                     'success': 'true',
-                    'Sender': sender[x],
+                    'Sender': sender[x],'emailServer':emailServer,
+                    'emailUser':emailUser,'emailPassword':emailPassword,
+                    'approvers': approvers,
                     'send_mail_requester_query_param': 'emailServer='
                     + emailServer+'&'+'emailUser=' + emailUser+'&'
                     + 'emailPassword=' + emailPassword+'&'+'recipientAddress='

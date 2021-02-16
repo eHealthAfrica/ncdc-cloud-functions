@@ -6,14 +6,10 @@ import os
 import base64
 
 
-with open('approver_recepient_name.json') as json_file:
-    recepient_Name = json.load(json_file)
-
-with open('approve_reject.json') as f:
-    approve_reject = json.load(f)
-
-
 def getApprovers(request):
+    with open('approve_reject.json') as f:
+        approve_reject = json.load(f)
+
     data = []
     filename = []
     links = []
@@ -21,6 +17,8 @@ def getApprovers(request):
     emailPassword = request.args.get('emailPassword')
     emailUser = request.args.get('emailUser')
     attachments = request.args.get('Attachments')
+    approvers = request.args.get('approvers')
+    recepient_Name = approvers.split(",")
     if attachments is None:
         placeholder = ""
     else:
@@ -70,12 +68,11 @@ def getApprovers(request):
             body_htmlpage.encode('utf-8')
         ).decode('utf-8')
         data.append({
-            'Name': recepient_Name[i]['name'],
-            'Email': recepient_Name[i]['email'],
+            'Email': recepient_Name[i],
             'send_mail_approver_query_param': 'emailServer='
             + emailServer + '&emailUser=' + emailUser
             + '&emailPassword=' + emailPassword
-            + '&recipientAddress=' + recepient_Name[i]['email']
+            + '&recipientAddress=' + recepient_Name[i]
             + '&messageSubject=Task Assigned to you'
             + '&messageBody=' + en_body + '&uuid='
             + myUuid + '&encoded=true',
@@ -83,7 +80,7 @@ def getApprovers(request):
             'send_Reminder_mail_approver_query_param': 'emailServer='
             + emailServer + '&' + 'emailUser=' + emailUser + '&'
             + 'emailPassword=' + emailPassword + '&' + 'recipientAddress='
-            + recepient_Name[i]['email'] + '&messageSubject='
+            + recepient_Name[i] + '&messageSubject='
             + 'Reminder: Task Assigned to you&messageBody=' + en_body
             + '&uuid=' + myUuid + '&encoded=true',
             'uuid': myUuid,
