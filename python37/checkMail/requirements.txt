@@ -6,3 +6,4 @@ google-auth-oauthlib
 aiofile
 gcloud-aio-storage
 
+beautifulsoup4
